@@ -11,7 +11,8 @@ call vundle#begin('~/.config/nvim/bundle')
   Plugin 'ctrlpvim/ctrlp.vim'       " fuzzy files finder, use <C-p> (really?) to find  file
   Plugin 'tpope/vim-vinegar'        " netrw additioning plugin, use - to appear and <C-6> to disappear
   Plugin 'Valloric/YouCompleteMe'   " completion plugin, use <C-n>,<C-p> for popup options navigating
-
+  Plugin 'godlygeek/tabular'        " tabularizer for some purposes (what for example?)
+  Plugin 'plasticboy/vim-markdown'  " markdown syntax highlighter
 call vundle#end()
 
 filetype plugin indent on           " allows auto-indenting depending on file type
