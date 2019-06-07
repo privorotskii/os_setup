@@ -10,7 +10,8 @@ call vundle#begin('~/.config/nvim/bundle')
   Plugin 'vim-airline/vim-airline'  " airline
   Plugin 'tpope/vim-vinegar'        " netrw additioning plugin, use - to appear and <C-6> to disappear
   Plugin 'Valloric/YouCompleteMe'   " completion plugin, use <C-n>,<C-p> for popup options navigating
-                                    " install fuzzy finder, use ?
+                                    " install fuzzy finder, use <C-P> for files searching
+                                    " <C-F> for text searching
                                     " good guide https://jdhao.github.io/2018/11/05/fzf_install_use/#as-nvim-plugin
   Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
   Plugin 'junegunn/fzf.vim'
