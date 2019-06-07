@@ -13,7 +13,7 @@ call vundle#begin('~/.config/nvim/bundle')
                                     " install fuzzy finder, use <C-P> for files searching
                                     " <C-F> for text searching
                                     " good guide https://jdhao.github.io/2018/11/05/fzf_install_use/#as-nvim-plugin
-  Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
   Plugin 'junegunn/fzf.vim'
 
 call vundle#end()
