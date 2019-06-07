@@ -17,6 +17,9 @@ mkdir -p ~/.config/nvim && cp init.vim "$_"
 mkdir -p ~/.config/nvim/bundle
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.config/nvim/bundle/Vundle.vim
 
+#install ag searcher
+apt-get install silversearcher-ag
+
 #install plugins
 nvim +PluginInstall +qall
 sudo apt install build-essential cmake python3-dev

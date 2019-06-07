@@ -10,7 +10,7 @@ call vundle#begin('~/.config/nvim/bundle')
   Plugin 'vim-airline/vim-airline'  " airline
   Plugin 'tpope/vim-vinegar'        " netrw additioning plugin, use - to appear and <C-6> to disappear
   Plugin 'Valloric/YouCompleteMe'   " completion plugin, use <C-n>,<C-p> for popup options navigating
-                                    " install fuzzy finder, use <C-P> for start searching
+                                    " install fuzzy finder, use ?
                                     " good guide https://jdhao.github.io/2018/11/05/fzf_install_use/#as-nvim-plugin
   Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
   Plugin 'junegunn/fzf.vim'
@@ -42,13 +42,14 @@ set splitright
 syntax on
 colorscheme onedark
 
-map <leader>n :bn<cr>              " magic keybindings for buffers handling
-map <leader>p :bp<cr>
-map <leader>d :bd<cr>  
+nnoremap <leader>n :bn<cr>|        " magic keybindings for buffers handling
+nnoremap <leader>p :bp<cr>|
+nnoremap <leader>d :bd<cr>|  
 
-nnoremap <C-J> <C-W><C-J>          " more natural moving through splits 
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+nnoremap <C-J> <C-W><C-J>|         " more natural moving through splits 
+nnoremap <C-K> <C-W><C-K>|
+nnoremap <C-L> <C-W><C-L>|
+nnoremap <C-H> <C-W><C-H>|
 
-nnoremap <C-P> :FZF<cr>
+nnoremap <C-P> :FZF<cr>|          " call files fuzzy finder
+nnoremap <C-F> :Ag<cr>|           " call Ag to find through all files
