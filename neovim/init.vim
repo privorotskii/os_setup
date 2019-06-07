@@ -8,9 +8,12 @@ call vundle#begin('~/.config/nvim/bundle')
   Plugin 'airblade/vim-gitgutter'   " shows current git changes at the left of lines numbers
   Plugin 'joshdick/onedark.vim'     " dark theme
   Plugin 'vim-airline/vim-airline'  " airline
-  Plugin 'ctrlpvim/ctrlp.vim'       " fuzzy files finder, use <C-p> (really?) to find  file
   Plugin 'tpope/vim-vinegar'        " netrw additioning plugin, use - to appear and <C-6> to disappear
   Plugin 'Valloric/YouCompleteMe'   " completion plugin, use <C-n>,<C-p> for popup options navigating
+                                    " install fuzzy finder, use <C-P> for start searching
+                                    " good guide https://jdhao.github.io/2018/11/05/fzf_install_use/#as-nvim-plugin
+  Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Plugin 'junegunn/fzf.vim'
 
 call vundle#end()
 
@@ -47,3 +50,5 @@ nnoremap <C-J> <C-W><C-J>          " more natural moving through splits
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+
+nnoremap <C-P> :FZF<cr>
