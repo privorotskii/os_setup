@@ -12,7 +12,7 @@ call vundle#begin('~/.config/nvim/bundle')
   Plugin 'Valloric/YouCompleteMe'   " completion plugin, use <C-n>,<C-p> for popup options navigating
                                     " install fuzzy finder, use <C-p> for navigation
                                     " good guide https://jdhao.github.io/2018/11/05/fzf_install_use/#as-nvim-plugin
-  Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
   Plugin 'junegunn/fzf.vim'
 
 call vundle#end()
@@ -51,7 +51,6 @@ nnoremap <C-h> :tabprevious<CR>   " magic for tabs handling
 nnoremap <C-l> :tabnext<CR>
 nnoremap <C-j> :tablast<CR>
 nnoremap <C-k> :tabfirst<CR>
-nnoremap <C-d> :tabclose<CR>
 
 nnoremap <C-P> :FZF<cr>|          " call files fuzzy finder
 nnoremap <C-F> :Ag<cr>|           " call Ag to find through all files
