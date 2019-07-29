@@ -10,8 +10,7 @@ call vundle#begin('~/.config/nvim/bundle')
   Plugin 'vim-airline/vim-airline'  " airline
   Plugin 'tpope/vim-vinegar'        " netrw additioning plugin, use - to appear and <C-6> to disappear
   Plugin 'Valloric/YouCompleteMe'   " completion plugin, use <C-n>,<C-p> for popup options navigating
-                                    " install fuzzy finder, use <C-P> for files searching
-                                    " <C-F> for text searching
+                                    " install fuzzy finder, use <C-p> for navigation
                                     " good guide https://jdhao.github.io/2018/11/05/fzf_install_use/#as-nvim-plugin
   Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
   Plugin 'junegunn/fzf.vim'
@@ -39,18 +38,21 @@ set wildmode=longest,list   " get bash-like tab completions
 set cc=120                  " set an 120 column border for good coding style
 set splitbelow              " open new splits to right and bottom
 set splitright
+let g:fzf_history_dir = '~/.local/share/fzf-history' "set history path for fzf finder
 
 syntax on
 colorscheme onedark
 
 nnoremap <leader>n :bn<cr>|        " magic keybindings for buffers handling
 nnoremap <leader>p :bp<cr>|
-nnoremap <leader>d :bd<cr>|  
+nnoremap <leader>d :bd<cr>|
 
-nnoremap <C-J> <C-W><C-J>|         " more natural moving through splits 
-nnoremap <C-K> <C-W><C-K>|
-nnoremap <C-L> <C-W><C-L>|
-nnoremap <C-H> <C-W><C-H>|
+nnoremap <C-h> :tabprevious<CR>   " magic for tabs handling
+nnoremap <C-l> :tabnext<CR>
+nnoremap <C-j> :tablast<CR>
+nnoremap <C-k> :tabfirst<CR>
+nnoremap <C-d> :tabclose<CR>
 
 nnoremap <C-P> :FZF<cr>|          " call files fuzzy finder
 nnoremap <C-F> :Ag<cr>|           " call Ag to find through all files
+
