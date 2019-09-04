@@ -15,6 +15,9 @@ call vundle#begin('~/.config/nvim/bundle')
                                     " good guide https://jdhao.github.io/2018/11/05/fzf_install_use/#as-nvim-plugin
   Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
   Plugin 'junegunn/fzf.vim'
+  Plugin 'rhysd/vim-crystal'        " auto-completion for crystal files and some built-in possibilities
+  Plugin 'thoughtbot/vim-rspec'     " running rspec from the nvim
+  Plugin 'tpope/vim-eunuch'         " handy files managing
 
 call vundle#end()
 
@@ -54,3 +57,8 @@ nnoremap <C-H> <C-W><C-H>|
 
 nnoremap <C-P> :FZF<cr>|          " call files fuzzy finder
 nnoremap <C-F> :Ag<cr>|           " call Ag to find through all files
+
+map <Leader>t :call RunCurrentSpecFile()<CR> " RSpec.vim mappings
+map <Leader>s :call RunNearestSpec()<CR>
+map <Leader>l :call RunLastSpec()<CR>
+map <Leader>a :call RunAllSpecs()<CR>
