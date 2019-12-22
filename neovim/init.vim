@@ -41,6 +41,7 @@ set wildmode=longest,list   " get bash-like tab completions
 set cc=120                  " set an 120 column border for good coding style
 set splitbelow              " open new splits to right and bottom
 set splitright
+set relativenumber
 let g:fzf_history_dir = '~/.local/share/fzf-history' "set history path for fzf finder
 
 syntax on
