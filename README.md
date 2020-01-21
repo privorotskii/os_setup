@@ -6,7 +6,5 @@ Several shell scripts for quick OS setting up
   * Changing keyboard layout switching way to stateless switching
   * Tmux and tmuxinator installing and configs adding
   * Terminator window managing scripts
-
-## Planned
   * Zsh configuring
   * Aliases creating
