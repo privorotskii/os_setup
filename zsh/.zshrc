@@ -1,111 +1,131 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+#th to oh-my-zsh installation.
+export ZSH=~/.oh-my-zsh
 
-# Path to your oh-my-zsh installation.
-export ZSH="/home/username/.oh-my-zsh"
-
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+# Name of the theme to load.
+# Look in ~/.oh-my-zsh/themes/
 ZSH_THEME="theunraveler"
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+# TMUX
+# Automatically start tmux
+ZSH_TMUX_AUTOSTART=true
 
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
+# Automatically connect to a previous session if it exists
+ZSH_TMUX_AUTOCONNECT=true
 
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
+force_color_prompt=yes
 
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
+# Enable command auto-correction.
 ENABLE_CORRECTION="true"
 
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
+# Display red dots whilst waiting for completion.
+COMPLETION_WAITING_DOTS="true"
 
-# Uncomment the following line if you want to disable marking untracked files
+# Disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-# Which plugins would you like to load?
-# Standard plugins can be found in ~/.oh-my-zsh/plugins/*
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git ruby bundler rake rvm github gnu-utils history-substring-search zsh-syntax-highlighting fasd)
-
-source $ZSH/oh-my-zsh.sh
+plugins=(git tmux ruby zsh-syntax-highlighting)
 
 # User configuration
+# Hide user@hostname if it's expected default user
+DEFAULT_USER="tolichp"
+prompt_context(){}
 
-# export MANPATH="/usr/local/man:$MANPATH"
+# Setting rg as the default source for fzf
+export FZF_DEFAULT_COMMAND='rg --files'
 
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
+# Apply the command to CTRL-T as well
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-   export EDITOR='vim'
- else
-   export EDITOR='nvim'
-fi
+# Set location of z installation
+. /usr/local/etc/profile.d/z.sh
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
+## FZF FUNCTIONS ##
 
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
+# fo [FUZZY PATTERN] - Open the selected file with the default editor
+#   - Bypass fuzzy finder if there's only one match (--select-1)
+#   - Exit if there's no match (--exit-0)
+fo() {
+  local files
+  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
+  [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
+}
 
-prompt_context() {
-  if [[ "$USER" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black default "%(!.%{%F{yellow}%}.)$USER"
+# fh [FUZZY PATTERN] - Search in command history
+fh() {
+  print -z $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
+}
+
+# fbr [FUZZY PATTERN] - Checkout specified branch
+# Include remote branches, sorted by most recent commit and limited to 30
+fgb() {
+  local branches branch
+  branches=$(git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format="%(refname:short)") &&
+  branch=$(echo "$branches" |
+           fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
+  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+}
+
+# ftm [SESSION_NAME | FUZZY PATTERN] - create new tmux session, or switch to existing one.
+# Running `tm` will let you fuzzy-find a session mame
+# Passing an argument to `ftm` will switch to that session if it exists or create it otherwise
+ftm() {
+  [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
+  if [ $1 ]; then
+    tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
+  fi
+  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
+}
+
+# ftmk [SESSION_NAME | FUZZY PATTERN] - delete tmux session
+# Running `tm` will let you fuzzy-find a session mame to delete
+# Passing an argument to `ftm` will delete that session if it exists
+ftmk() {
+  if [ $1 ]; then
+    tmux kill-session -t "$1"; return
+  fi
+  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux kill-session -t "$session" || echo "No session found to delete."
+}
+
+# fuzzy grep via rg and open in vim with line number
+fgr() {
+  local file
+  local line
+
+  read -r file line <<<"$(rg --no-heading --line-number $@ | fzf -0 -1 | awk -F: '{print $1, $2}')"
+
+  if [[ -n $file ]]
+  then
+     vim $file +$line
   fi
 }
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
+# Enabled zsh-autosuggestions
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-if [ -f ~/.bash_aliases ]; then
-  . ~/.bash_aliases
-fi
+# Set default editor to nvim
+export EDITOR='nvim'
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
-export ANDROID_HOME=$HOME/Android/Sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/tools
-export PATH=$PATH:$ANDROID_HOME/tools/bin
-export PATH=$PATH:$ANDROID_HOME/platform-tools
+# Enabled true color support for terminals
+export NVIM_TUI_ENABLE_TRUE_COLOR=1
 
-# Uncomment this line if you use tmuxinator
-# source ~/.bin/tmuxinator.zsh
+# Aliases
+alias vim="nvim"
+alias top="vtop --theme=wizard"
+alias ls="colorls -lA --sd"
 
-# Uncomment this line if you use direnv
-# eval "$(direnv hook zsh)"
+source $ZSH/oh-my-zsh.sh
+
+# Set Spaceship as prompt
+autoload -U promptinit; promptinit
+# prompt spaceship
+SPACESHIP_PACKAGE_SHOW=false
+SPACESHIP_NODE_SHOW=false
+SPACESHIP_GIT_STATUS_STASHED=''
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

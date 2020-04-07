@@ -8,3 +8,5 @@ Several shell scripts for quick OS setting up
   * Terminator window managing scripts
   * Zsh configuring
   * Aliases creating
+
+Under construction now. Construction is heavily inspired by [this](https://github.com/ctaylo21/jarvis)
